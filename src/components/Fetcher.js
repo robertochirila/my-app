@@ -1191,7 +1191,10 @@ const Fetcher = () => {
                 }
             }
             )
-            .catch(err => console.error(err));
+            .catch(err => {
+                setRecords(auxRecords.Records)
+                console.error(err)
+            });
     }
 
     let getProducts = (access_token) => {

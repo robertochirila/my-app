@@ -5,21 +5,19 @@ import {
     EuiHealth,
 } from '@elastic/eui';
 
+
 const Records = (props) => {
     const records = props.records
     const columns = [
         {
-            field: 'firstName',
-            name: 'First Name',
+            field: 'name',
+            name: 'Product Name',
             sortable: true,
-            'data-test-subj': 'firstNameCell',
+            'data-test-subj': 'productNameCell',
             mobileOptions: {
                 render: item => (
                     <span>
-                        {item.firstName}{' '}
-                        <EuiLink href="#" target="_blank">
-                            {item.lastName}
-                        </EuiLink>
+                        {item.Name}{' '}
                     </span>
                 ),
                 header: false,
@@ -27,54 +25,53 @@ const Records = (props) => {
                 enlarge: true,
                 fullWidth: true,
             },
-        },
+        }, ,
         {
-            field: 'lastName',
-            name: 'Last Name',
-            truncateText: true,
-            render: name => (
-                <EuiLink href="#" target="_blank">
-                    {name}
-                </EuiLink>
-            ),
+            field: 'price',
+            name: 'Price',
+            dataType: 'number',
             mobileOptions: {
-                show: false,
-            },
+                render: item => {
+                    return (
+                        <span>
+                            {item.Price}{''}{item.CurrencyCode}
+                        </span>
+                    )
+                },
+                header: false,
+            }
         },
         {
-            field: 'github',
-            name: 'Github',
+            field: 'description',
+            name: 'Description',
+            sortable: true,
+            'data-test-subj': 'descriptionCell',
+            mobileOptions: {
+                render: item => (
+                    <span>
+                        {item.Description}{' '}
+                    </span>
+                ),
+                header: false,
+                truncateText: true,
+                enlarge: true,
+                fullWidth: true,
+            },
         },
         {
             field: 'online',
             name: 'Online',
             dataType: 'boolean',
-            render: online => {
-                const color = online ? 'success' : 'danger';
-                const label = online ? 'Online' : 'Offline';
-                return <EuiHealth color={color}>{label}</EuiHealth>;
-            },
-        },
+            mobileOptions: {
+                render: item => {
+                    const color = item.Visible ? 'success' : 'danger';
+                    const label = item.Visible ? 'Available' : 'Unavailable';
+                    return <EuiHealth color={color}>{label}</EuiHealth>;
+                },
+                header: false,
+            }
+        }
     ];
-    const getRowProps = item => {
-        const { id } = item;
-        return {
-            'data-test-subj': `row-${id}`,
-            className: 'customRowClass',
-            onClick: () => console.log(`Clicked row ${id}`),
-        };
-    };
-
-    const getCellProps = (item, column) => {
-        const { id } = item;
-        const { field } = column;
-        return {
-            className: 'customCellClass',
-            'data-test-subj': `cell-${id}-${field}`,
-            textOnly: true,
-        };
-    };
-
     console.log(records)
 
     return <>
@@ -82,8 +79,7 @@ const Records = (props) => {
             items={records}
             rowHeader="firstName"
             columns={columns}
-            rowProps={getRowProps}
-            cellProps={getCellProps} />
+        />
     </>
 
 }
