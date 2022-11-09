@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import Records from './Records'
 
 
 const Fetcher = () => {
@@ -1204,7 +1205,6 @@ const Fetcher = () => {
         fetch('https://cors-anywhere.herokuapp.com/https://spaces.nexudus.com/api/billing/products?page=1&size=25', options)
             .then(response => response.json())
             .then(response => {
-                console.log(response)
                 if (response.Records.length > 0) {
                     setRecords(response.Records)
                 }
@@ -1216,7 +1216,7 @@ const Fetcher = () => {
         getToken()
     }, [])
     return <>
-        <p>Hello</p>
+        <Records records={records}></Records>
     </>
 }
 
