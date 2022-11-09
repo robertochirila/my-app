@@ -8,15 +8,42 @@ import {
 
 const Records = (props) => {
     const records = props.records
+    const nrRecords = records.length
+    const truncate = (str, n) => {
+        let splitString = str.split(" ")
+        let newArrayString;
+        let text = "";
+        if (splitString.length > 10) {
+            newArrayString = splitString.splice(0, n - 1)
+            for (let i = 0; i < newArrayString.length; i++) {
+                text = text + newArrayString[i] + " "
+            }
+            return (
+                <>
+                    {text}
+                </>
+            )
+        } else if (str === " ") {
+            return (<span style={{ "color": "#ff0000" }}>
+                No Description
+            </span>)
+        }
+        return (
+            <>
+                {str}
+            </>
+        )
+    }
     const columns = [
         {
             field: 'name',
             name: 'Product Name',
             sortable: true,
             'data-test-subj': 'productNameCell',
+            footer: <em>Total Records: {nrRecords}</em>,
             mobileOptions: {
                 render: item => (
-                    <span>
+                    <span style={{ "fontWeight": "bold" }}>
                         {item.Name}{' '}
                     </span>
                 ),
@@ -25,7 +52,7 @@ const Records = (props) => {
                 enlarge: true,
                 fullWidth: true,
             },
-        }, ,
+        },
         {
             field: 'price',
             name: 'Price',
@@ -49,11 +76,10 @@ const Records = (props) => {
             mobileOptions: {
                 render: item => (
                     <span>
-                        {item.Description}{' '}
+                        {truncate(item.Description, 10)}
                     </span>
                 ),
                 header: false,
-                truncateText: true,
                 enlarge: true,
                 fullWidth: true,
             },
@@ -72,6 +98,24 @@ const Records = (props) => {
             }
         }
     ];
+    const getRowProps = item => {
+        const { Id } = item;
+        return {
+            'data-test-subj': `row-${Id}`,
+            className: 'customRowClass',
+            onClick: () => console.log(`Clicked row ${Id}`),
+        };
+    };
+
+    const getCellProps = (item, column) => {
+        const { id } = item;
+        const { field } = column;
+        return {
+            className: 'customCellClass',
+            'data-test-subj': `cell-${id}-${field}`,
+            textOnly: true,
+        };
+    };
     console.log(records)
 
     return <>
@@ -79,6 +123,9 @@ const Records = (props) => {
             items={records}
             rowHeader="firstName"
             columns={columns}
+            rowProps={getRowProps}
+            cellProps={getCellProps}
+
         />
     </>
 
