@@ -3,20 +3,48 @@ import {
     EuiBasicTable,
     EuiLink,
     EuiHealth,
+    EuiShowFor,
 } from '@elastic/eui';
 
 
 const Records = (props) => {
     const records = props.records
+    const nrRecords = records.length
+    const truncate = (str, n) => {
+        let splitString = str.split(" ")
+        let newArrayString;
+        let text = "";
+        if (splitString.length > 10) {
+            newArrayString = splitString.splice(0, n - 1)
+            for (let i = 0; i < newArrayString.length; i++) {
+                text = text + newArrayString[i] + " "
+            }
+            return (
+                <>
+                    {text}
+                </>
+            )
+        } else if (str === " ") {
+            return (<span style={{ "color": "#ff0000" }}>
+                No Description
+            </span>)
+        }
+        return (
+            <>
+                {str}
+            </>
+        )
+    }
     const columns = [
         {
             field: 'name',
             name: 'Product Name',
             sortable: true,
             'data-test-subj': 'productNameCell',
+            footer: <em>Total Records: {nrRecords}</em>,
             mobileOptions: {
                 render: item => (
-                    <span>
+                    <span style={{ "fontWeight": "bold" }}>
                         {item.Name}{' '}
                     </span>
                 ),
@@ -25,7 +53,7 @@ const Records = (props) => {
                 enlarge: true,
                 fullWidth: true,
             },
-        }, ,
+        },
         {
             field: 'price',
             name: 'Price',
@@ -48,12 +76,12 @@ const Records = (props) => {
             'data-test-subj': 'descriptionCell',
             mobileOptions: {
                 render: item => (
+
                     <span>
-                        {item.Description}{' '}
+                        {truncate(item.Description, 10)}
                     </span>
                 ),
                 header: false,
-                truncateText: true,
                 enlarge: true,
                 fullWidth: true,
             },
@@ -66,19 +94,38 @@ const Records = (props) => {
                 render: item => {
                     const color = item.Visible ? 'success' : 'danger';
                     const label = item.Visible ? 'Available' : 'Unavailable';
-                    return <EuiHealth color={color}>{label}</EuiHealth>;
+                    return <EuiHealth color={color}>{label}</EuiHealth>
                 },
                 header: false,
             }
         }
     ];
-    console.log(records)
+    const getRowProps = item => {
+        const { Id } = item;
+        return {
+            'data-test-subj': `row-${Id}`,
+            className: 'customRowClass',
+            onClick: () => console.log(`Clicked row ${Id}`),
+        };
+    };
+
+    const getCellProps = (item, column) => {
+        const { id } = item;
+        const { field } = column;
+        return {
+            className: 'customCellClass',
+            'data-test-subj': `cell-${id}-${field}`,
+            textOnly: true,
+        };
+    };
 
     return <>
         <EuiBasicTable
             items={records}
             rowHeader="firstName"
             columns={columns}
+            rowProps={getRowProps}
+            cellProps={getCellProps}
         />
     </>
 
