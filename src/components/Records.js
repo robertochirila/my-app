@@ -3,6 +3,7 @@ import {
     EuiBasicTable,
     EuiLink,
     EuiHealth,
+    EuiShowFor,
 } from '@elastic/eui';
 
 
@@ -75,6 +76,7 @@ const Records = (props) => {
             'data-test-subj': 'descriptionCell',
             mobileOptions: {
                 render: item => (
+
                     <span>
                         {truncate(item.Description, 10)}
                     </span>
@@ -92,7 +94,7 @@ const Records = (props) => {
                 render: item => {
                     const color = item.Visible ? 'success' : 'danger';
                     const label = item.Visible ? 'Available' : 'Unavailable';
-                    return <EuiHealth color={color}>{label}</EuiHealth>;
+                    return <EuiHealth color={color}>{label}</EuiHealth>
                 },
                 header: false,
             }
@@ -116,7 +118,6 @@ const Records = (props) => {
             textOnly: true,
         };
     };
-    console.log(records)
 
     return <>
         <EuiBasicTable
@@ -125,7 +126,6 @@ const Records = (props) => {
             columns={columns}
             rowProps={getRowProps}
             cellProps={getCellProps}
-
         />
     </>
 
